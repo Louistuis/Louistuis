@@ -1,6 +1,6 @@
 // Renders the GitHub profile images from the live lou15.com page, so the profile and the site
 // stay one design: assets/header.png (the intro), assets/<slug>.png (one print per project),
-// assets/footer.png (the sticker footer). Headless; run through the shared Chromium queue:
+// assets/footer.png (the footer). Headless; run through the shared Chromium queue:
 //   lockf -t 900 /tmp/ls-chromium.lock nice -n 15 node scripts/render.mjs
 import { chromium } from "/opt/homebrew/lib/node_modules/playwright/index.mjs"
 import path from "node:path"
@@ -44,7 +44,7 @@ await shoot(p.locator(".intro"), "header")
 const slugs = await p.$$eval(".card", (cs) => cs.map((c) => c.style.getPropertyValue("--vt").trim().replace("card-", "")))
 for (let i = 0; i < slugs.length; i++) await shoot(p.locator(".card").nth(i), slugs[i])
 
-// The footer plays a storyboard when it scrolls in; wait for the stickers to land.
+// The footer plays a storyboard when it scrolls in; wait for the wordmark to finish writing.
 await p.evaluate(() => scrollTo(0, document.documentElement.scrollHeight))
 await p.waitForTimeout(5200)
 await p.locator(".ssf").evaluate((n) => { n.dataset.shoot = ""; n.style.minHeight = "640px" })
